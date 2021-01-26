@@ -3,4 +3,7 @@ project(yd2d)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(yd2d main.cpp)
+
+include_directories(./include)
+
+add_executable(yd2d main.cpp ${yd2d_includes})
