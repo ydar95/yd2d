@@ -12,7 +12,7 @@ namespace yd2d {
 
 template<typename T>
 class Vec2_ {
- private:
+ protected:
   T m_x;
   T m_y;
 
@@ -23,6 +23,8 @@ class Vec2_ {
 
   [[nodiscard]] inline constexpr T x() const noexcept {return m_x;}
   [[nodiscard]] inline constexpr T y() const noexcept {return m_y;}
+  inline T& rx() noexcept {return m_x;}
+  inline T& ry() noexcept {return m_y;}
 
   inline T mag() { return std::sqrt(x() * x() + y() * y()); }
   inline T mag2() { return x() * x() + y() * y(); }
@@ -38,11 +40,13 @@ class Vec2_ {
   inline Vec2_  operator /  (const Vec2_& rhs) const { return Vec2_(this->x() / rhs.x(), this->y() / rhs.y()); }
   inline Vec2_& operator += (const Vec2_& rhs) { this->m_x += rhs.x(); this->m_y += rhs.y(); return *this; }
   inline Vec2_& operator -= (const Vec2_& rhs) { this->m_x -= rhs.x(); this->m_y -= rhs.y(); return *this; }
-  inline Vec2_& operator *= (const T& rhs) { this->m_y *= rhs; this->m_y *= rhs; return *this; }
-  inline Vec2_& operator /= (const T& rhs) { this->m_y /= rhs; this->m_y /= rhs; return *this; }
+  inline Vec2_& operator *= (const T& rhs) { this->m_x *= rhs; this->m_y *= rhs; return *this; }
+  inline Vec2_& operator /= (const T& rhs) { this->m_x /= rhs; this->m_y /= rhs; return *this; }
   inline explicit operator Vec2_<int32_t>() const { return { static_cast<int32_t>(this->x()), static_cast<int32_t>(this->y()) }; }
   inline explicit operator Vec2_<float>() const { return { static_cast<float>(this->x()), static_cast<float>(this->y()) }; }
   inline explicit operator Vec2_<double>() const { return { static_cast<double>(this->x()), static_cast<double>(this->y()) }; }
+
+  
 };
 
 template<class T> inline Vec2_<T> operator * (const float& lhs, const Vec2_<T>& rhs)
@@ -70,10 +74,8 @@ template<class T> inline Vec2_<T> operator / (const int& lhs, const Vec2_<T>& rh
   return Vec2_<T>((T)(lhs / (int)rhs.x()), (T)(lhs / (int)rhs.y()));
 }
 
-typedef Vec2_<int32_t>	VecI2d;
-typedef Vec2_<uint32_t>	VecU2d;
+typedef Vec2_<int32_t>	Vec2d;
 typedef Vec2_<float>	VecF2d;
-typedef Vec2_<double>	vdcD2d;
 
 }
 #endif //YD2D_INCLUDE_YD2D_MATH_Vec2__HPP_

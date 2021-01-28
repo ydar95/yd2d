@@ -1,12 +1,9 @@
-#include <iostream>
-#include <cstdio>
-#include <yd2d/math/vector2d.hpp>
-
+#include <yd2d/yd2d_typedef.hpp>
+#include <yd2d/platforms/platform_windows.hpp>
 int main() {
-  std::cout << u8"Hello, World!" << std::endl;
-  yd2d::VecF2d x(1,2);
-  yd2d::VecF2d y(1,2);
-  auto z = x+y;
-  printf("%f,%f\n",z.x(),z.y());
+  auto win = yd2d::PlatformWindows();
+  win.createWindow(yd2d::Vec2d(100,100),yd2d::Size(1280,720));
+  win.setWindowTitle("6666");
+  win.handleWindowEvent();
   return 0;
 }

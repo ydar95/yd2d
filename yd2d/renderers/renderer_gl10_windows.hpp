@@ -1,0 +1,15 @@
+//
+// Created by ydar on 2021/1/28.
+//
+
+#ifndef YD2D_YD2D_RENDERERS_RENDERER_GL10_WINDOWS_HPP_
+#define YD2D_YD2D_RENDERERS_RENDERER_GL10_WINDOWS_HPP_
+
+namespace yd2d {
+
+class RendererGL10Windows {
+
+};
+
+}
+#endif //YD2D_YD2D_RENDERERS_RENDERER_GL10_WINDOWS_HPP_
