@@ -5,7 +5,7 @@
 #ifndef YD2D_INCLUDE_YD2D_PLATFORMS_BASE_PLATFORM_HPP_
 #define YD2D_INCLUDE_YD2D_PLATFORMS_BASE_PLATFORM_HPP_
 
-#include "../yd2d_typedef.hpp"
+#include "../base/rcode.hpp"
 #include "../math/vector2d.hpp"
 #include "../math/size.hpp"
 

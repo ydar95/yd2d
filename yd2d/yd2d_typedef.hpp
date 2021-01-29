@@ -11,17 +11,14 @@
 #include "math/rect.hpp"
 #include "math/vector2d.hpp"
 
+
+#include "base/rcode.hpp"
 #include "base/hwbutton.hpp"
 #include "base/keyboard.hpp"
 #include "base/mouse.hpp"
 #include "base/pixel.hpp"
 
-namespace yd2d{
-enum rcode:int32_t {
-  FAIL = -1, OK = 0, NO_FILE = -2
-};
 
-}
 #endif //YD2D_INCLUDE_YD2D_TYPEDEF_HPP_
 
 

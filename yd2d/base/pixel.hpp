@@ -26,8 +26,8 @@ public:
 //    {}
   inline bool operator==(const Pixel& p) const { return color == p.color; }
   inline bool operator!=(const Pixel& p) const { return color != p.color; }
-  inline uint8_t* data() {
-    return reinterpret_cast<uint8_t*>(&color);
+  inline const uint8_t* data() const{
+    return reinterpret_cast<const uint8_t*>(&color);
   }
 };
 
@@ -56,7 +56,8 @@ public:
   WHITE(255, 255, 255),
   BLACK(0, 0, 0),
   BLANK(0, 0, 0, 0);
-}
+
+};
 
 
 

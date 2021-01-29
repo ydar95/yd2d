@@ -7,7 +7,6 @@
 
 #include<cstdint>
 #include<cmath>
-
 namespace yd2d {
 
 template<typename T>

@@ -5,6 +5,7 @@
 #ifndef YD2D_INCLUDE_YD2D_MATH_SIZE_HPP_
 #define YD2D_INCLUDE_YD2D_MATH_SIZE_HPP_
 
+#include <cstdint>
 namespace yd2d{
 
 template<typename T>
@@ -16,7 +17,7 @@ class Size_{
  public:
   inline constexpr Size_() :  m_width(0),m_height(0){}
   inline constexpr Size_(T _width, T _height) : m_width(_width),m_height(_height) {   }
-  inline constexpr Size_(const Size_ &sz) : m_width(sz.m_width), m_height(sz._height) {  }
+  inline constexpr Size_(const Size_ &sz) : m_width(sz.m_width), m_height(sz.m_height) {  }
 
   [[nodiscard]] inline constexpr T width() const noexcept {return m_width;}
   [[nodiscard]] inline constexpr T height() const noexcept {return m_height;}
@@ -33,6 +34,7 @@ class Size_{
   inline Size_& operator /= (const T& rhs) { this->m_width /= rhs; this->m_height /= rhs; return *this; }
   inline explicit operator Size_<int32_t>() const { return { static_cast<int32_t>(this->width()), static_cast<int32_t>(this->height()) }; }
   inline explicit operator Size_<float>() const { return { static_cast<float>(this->width()), static_cast<float>(this->height()) }; }
+
 };
 
 typedef Size_<int32_t> Size;
