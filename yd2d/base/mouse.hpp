@@ -13,10 +13,9 @@ enum Mouse:int32_t
 {
   LeftMouse,
   RightMouse,
-  MiddleMouse,
-
-  MouseNumbers
+  MiddleMouse
 };//注意 这个必须放在末尾，表示定义的鼠标按键数量
+static constexpr int32_t MouseNumbers=3;
 
 };
 

@@ -18,9 +18,7 @@ enum Key : int32_t {
   BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,
   NP0, NP1, NP2, NP3, NP4, NP5, NP6, NP7, NP8, NP9,
   NP_MUL, NP_DIV, NP_ADD, NP_SUB, NP_DECIMAL, PERIOD,
-
-  KeyBoardNumbers,
-}; // 注意 这个必须放在末尾，表示定义按键数量
-
+};
+static constexpr int32_t KeyBoardNumbers=256;
 };
 #endif //YD2D_INCLUDE_YD2D_BASE_KEYBOARD_HPP_
