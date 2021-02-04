@@ -30,6 +30,9 @@ yd2d::rcode yd2d::RendererOGL10Windows::createDevice(std::vector<std::any> param
   if (wglSwapInterval && !vsync) wglSwapInterval(0);
 
   glEnable(GL_TEXTURE_2D); // Turn on texturing
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
   return yd2d::rcode::OK;
 }
@@ -54,13 +57,14 @@ void yd2d::RendererOGL10Windows::clearFrame(yd2d::Pixel color, bool clear_depth)
   glClear(GL_COLOR_BUFFER_BIT);
   if (clear_depth) glClear(GL_DEPTH_BUFFER_BIT);
 }
-uint32_t yd2d::RendererOGL10Windows::createTexture(uint32_t width, uint32_t height) {
+uint32_t yd2d::RendererOGL10Windows::createTexture(const uint8_t* rgba,uint32_t width, uint32_t height) {
   uint32_t id = 0;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
   return id;
 }
 uint32_t yd2d::RendererOGL10Windows::deleteTexture(uint32_t id) {

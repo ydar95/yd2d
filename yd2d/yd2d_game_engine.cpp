@@ -8,7 +8,7 @@
 #include <functional>
 #include "platforms/platform_windows.hpp"
 #include "renderers/renderer_gl10_windows.hpp"
-#include <gl/gl.h>
+#include "yd2d/texture/texture2d.hpp"
 
 using namespace yd2d;
 using std::placeholders::_1;
@@ -170,58 +170,12 @@ void yd2d::GameEngine::updateHWButtonInRendererThread()
       pKeys[i].setHold(pStateNew[i] == pStateOld[i]);
       pKeys[i].setState(pStateNew[i]);
       pStateOld[i] = pStateNew[i];
-      if (pStateNew[i] == HWBtnState::Pressed) {
-        int x;
-        x = 1;
-      }
     }
   };
 
   ScanHardware(this->m_keyboard_state.data(), this->m_old_keyboard_state.data(), this->m_new_keyboard_state.data(), yd2d::KeyBoardNumbers);
   ScanHardware(this->m_mouse_state.data(), this->m_old_mouse_state.data(), this->m_new_mouse_state.data(), yd2d::MouseNumbers);
 
-}
-
-void yd2d::GameEngine::coreRenderThread()
-{
-  std::unique_lock lock(this->m_mutex_render_thread);
-  // TODO 这样放不太合理
-  this->mp_renderer = new yd2d::RendererOGL10Windows();
-  this->mp_renderer->createDevice({ this->mp_platform->handle()}, m_vsync);
-  this->mp_renderer->prepareDevice();
-  this->mp_renderer->updateViewport({0,0 }, m_win_size);
-  this->mp_renderer->updateOrtho2d(0, static_cast<float>(this->m_grid_num.width()), 0, static_cast<float>(this->m_grid_num.height()));
-
-  m_game_time.start();
-  auto start_time =  this->m_game_time.time();
-  auto end_time =  this->m_game_time.time();
-  while (m_atomic_status) {
-    updateHWButtonInRendererThread(); //在 帧之间更新一些属性
-
-    this->mp_renderer->prepareDevice();
-
-    if (this->m_platform_resized) {
-      this->mp_renderer->updateViewport({0,0}, m_win_size);
-      this->mp_renderer->updateOrtho2d(0, static_cast<float>(this->m_grid_num.width()), 0, static_cast<float>(this->m_grid_num.height()));
-      m_platform_resized = false;
-    }
-
-    this->mp_renderer->clearFrame(yd2d::BLACK, true);
-
-    end_time =  this->m_game_time.time();
-    auto delte_time = end_time - start_time;
-    //printf("%f,%f,%f\n", start_time, end_time, eps);
-    start_time = end_time;
-
-    this->onUpdateOneFrame(GameTime::toSec(delte_time));
-    this->mp_renderer->displayFrame();
-
-  }
-
-  // TODO 这样放不太合理
-  this->mp_renderer->destroyDevice();
-  delete this->mp_renderer;
-  this->mp_renderer = nullptr;
 }
 
 yd2d::HWButton GameEngine::getKey(yd2d::Key key) const noexcept
@@ -245,11 +199,57 @@ yd2d::HWButton GameEngine::getRightMouse() const noexcept {
   return getMouse(Mouse::RightMouse);
 }
 
+void yd2d::GameEngine::coreRenderThread()
+{
+  std::unique_lock lock(this->m_mutex_render_thread);
+  // TODO 这样放不太合理
+  this->mp_renderer = new yd2d::RendererOGL10Windows();
+  this->mp_renderer->createDevice({ this->mp_platform->handle()}, m_vsync);
+  this->mp_renderer->prepareDevice();
+  this->mp_renderer->updateViewport({0,0 }, m_win_size);
+  this->mp_renderer->updateOrtho2d(0, static_cast<float>(this->m_grid_num.width()), 0, static_cast<float>(this->m_grid_num.height()));
+
+  onRenderThreadStarted();
+
+  m_game_time.start();
+  auto start_time =  this->m_game_time.time();
+  auto end_time =  this->m_game_time.time();
+  while (m_atomic_status) {
+    updateHWButtonInRendererThread(); //在 帧之间更新一些属性
+
+    this->mp_renderer->prepareDevice();
+
+    if (this->m_platform_resized) {
+      this->mp_renderer->updateViewport({0,0}, m_win_size);
+      this->mp_renderer->updateOrtho2d(0, static_cast<float>(this->m_grid_num.width()), 0, static_cast<float>(this->m_grid_num.height()));
+      m_platform_resized = false;
+    }
+
+    end_time =  this->m_game_time.time();
+    auto delte_time = end_time - start_time;
+    start_time = end_time;
+
+    this->onUpdateOneFrame(GameTime::toSec(delte_time));
+    this->mp_renderer->displayFrame();
+
+  }
+
+  //释放 texture2d
+  this->m_texture2d_map.clear();
+
+  // TODO 这样放不太合理
+  this->mp_renderer->destroyDevice();
+  delete this->mp_renderer;
+  this->mp_renderer = nullptr;
+}
+
 bool yd2d::GameEngine::onUpdateOneFrame(double delte_time)
 {
-  printf("%f\n",delte_time);
-  static float x = 0;
-  static float y = 0;
+  //printf("%f\n",delte_time);
+  static float x = 1;
+  static float y = 1;
+
+  this->mp_renderer->clearFrame(yd2d::RED, true);
 
   auto lm = getLeftMouse();
   auto key_a = getKey(A);
@@ -277,6 +277,33 @@ bool yd2d::GameEngine::onUpdateOneFrame(double delte_time)
     y+= delte_time;
   }
 
-  glRectf( x- 1,  y- 1,  x+ 1,  y+ 1);
+//  glRectf( x- 1,  y- 1,  x+ 1,  y+ 1);
+  auto frame = this->m_texture2d_frame_map["0"];
+  this->renderer()->applyTexture(frame.texture_id());
+  auto rectf=frame.texture_rect();
+  glBegin(GL_QUADS);{
+    glTexCoord2f(rectf.left(),rectf.bottom());
+    //glTexCoord2f(0,0);
+    glVertex2f(x- 1,y- 1);
+
+    glTexCoord2f(rectf.right(),rectf.bottom());
+    //glTexCoord2f(1,0);
+    glVertex2f(x+ 1,y- 1);
+
+    glTexCoord2f(rectf.right(),rectf.top());
+    //glTexCoord2f(1,1);
+    glVertex2f(x+ 1,y+ 1);
+
+    glTexCoord2f(rectf.left(),rectf.top());
+    //glTexCoord2f(0,1);
+    glVertex2f(x- 1,y+ 1);
+  }glEnd();
+
+  return true;
+}
+
+bool GameEngine::onRenderThreadStarted() {
+  this->m_texture2d_map["wall01"]=std::make_shared<Texture2d>(u8R"(res/Event01-Wall01.png)",this->renderer());
+  this->m_texture2d_frame_map["0"]=this->m_texture2d_map["wall01"]->createFrame(Rect(0,32,0,32));
   return true;
 }

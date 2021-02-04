@@ -9,13 +9,15 @@
 
 #include "platforms/base_platform.hpp"
 #include "renderers/base_renderder.hpp"
-
+#include "texture/texture2d.hpp"
 #include "tools/game_time.hpp"
 
 #include <mutex>
 #include <atomic>
 #include <array>
 #include <cstdint>
+#include <map>
+#include <memory>
 namespace yd2d {
 
 class GameEngine{
@@ -34,6 +36,7 @@ class GameEngine{
  protected:
   //virtual bool onInit();
   virtual bool onUpdateOneFrame(double delte_time);
+  virtual bool onRenderThreadStarted();
   //virtual bool onDestroy();
  protected:
   //根据windows form 事件进行更新属性和状态
@@ -60,7 +63,8 @@ class GameEngine{
   yd2d::Size m_grid_size;
   yd2d::Size m_win_size;
   bool m_vsync;
-
+  std::map<std::string,std::shared_ptr<yd2d::Texture2d>> m_texture2d_map;
+  std::map<std::string,yd2d::Texture2dFrame> m_texture2d_frame_map;
  private:
   yd2d::Vec2d m_mouse_platform_pos; // 左下角为 原点 的 鼠标坐标系, 单位是 像素
   yd2d::VecF2d m_mouse_viewport_pos; // 左下角为 原点 的 renderer 的 可视范围坐标系(Ortho2d.left_bottom), 单位是 renderer 单位

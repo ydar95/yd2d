@@ -25,7 +25,7 @@ class Renderer
     virtual void       prepareDevice() = 0;
     virtual void       clearFrame(yd2d::Pixel color, bool clear_depth) = 0;
 
-    virtual uint32_t   createTexture(uint32_t  width, uint32_t height) = 0;
+    virtual uint32_t   createTexture(const uint8_t* rgba,uint32_t  width, uint32_t height) = 0;
     virtual uint32_t   deleteTexture(uint32_t id) = 0;
     virtual void       applyTexture(uint32_t id) = 0;
 

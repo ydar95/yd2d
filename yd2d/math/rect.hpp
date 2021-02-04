@@ -45,11 +45,12 @@ namespace yd2d{
 
     constexpr inline T cx() const noexcept { return (m_x1 + m_x2) / 2; }
     constexpr inline T cy() const noexcept { return (m_y1 + m_y2) / 2; }
-    constexpr inline void setLeft(int left) noexcept { m_x1 = left; }
-    constexpr inline void setTop(int top) noexcept { m_y2 = top; }
-    constexpr inline void setRight(int right) noexcept { m_x2 = right; }
-    constexpr inline void setBottom(int bottom) noexcept { m_y2 = bottom; }
-    constexpr inline void setCenterX(int x) noexcept
+
+    constexpr inline void setLeft(T left) noexcept { m_x1 = left; }
+    constexpr inline void setTop(T top) noexcept { m_y2 = top; }
+    constexpr inline void setRight(T right) noexcept { m_x2 = right; }
+    constexpr inline void setBottom(T bottom) noexcept { m_y1 = bottom; }
+    constexpr inline void setCenterX(T x) noexcept
     {
       auto width = this->width();
       auto half_width = width / 2;
@@ -57,7 +58,7 @@ namespace yd2d{
       m_x1 = x - half_width;
       m_x2 = x + (width - half_width);
     }
-    constexpr inline void setCenterY(int y) noexcept
+    constexpr inline void setCenterY(T y) noexcept
     {
       auto height = this->height();
       auto half_height = height / 2;

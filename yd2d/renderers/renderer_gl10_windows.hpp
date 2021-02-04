@@ -26,7 +26,7 @@ class RendererOGL10Windows
   virtual void       prepareDevice() override;
   virtual void       clearFrame(yd2d::Pixel color, bool clear_depth) override;
 
-  virtual uint32_t   createTexture(uint32_t  width, uint32_t height) override;
+  virtual uint32_t   createTexture(const uint8_t* rgba,uint32_t  width, uint32_t height) override;
   virtual uint32_t   deleteTexture(uint32_t id) override;
   virtual void       applyTexture(uint32_t id) override;
 
